@@ -17,30 +17,16 @@ export default function About() {
 
   const teamMembers = [
     {
-      name: "Rukaiya Khan",
+      name: "Rohit Dongare",
       role: "Team Leader",
-      desc: "Contributing to research, collaboration, and overall project coordination for ProConnect.",
+      desc: "Contributing to research, collaboration, and overall project coordination for ProConnect. Managing frontend along with the backend",
     },
     {
       name: "Shruti Budhbaware",
       role: "Team Member",
-      desc: "Focused on creative ideas, teamwork, and improving the overall user experience.",
+      desc: "Focused on creative ideas, teamwork. Managing the frontend of the project",
     },
-    {
-      name: "Samruddhi Palatkar",
-      role: "Team Member",
-      desc: "Supporting platform planning, feature discussions, and smooth project execution.",
-    },
-    {
-      name: "Simarjit Kaur",
-      role: "Team Member",
-      desc: "Helping shape project flow, coordination, and quality contributions across the platform.",
-    },
-    {
-      name: "Sayali Walke",
-      role: "Team Member",
-      desc: "Actively involved in teamwork, idea development, and strengthening the project vision.",
-    },
+    
   ];
 
   const getInitials = (name) => {
