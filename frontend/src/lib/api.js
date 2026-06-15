@@ -1,4 +1,4 @@
-const configuredApiUrl = import.meta.env.VITE_API_URL;
+const configuredApiUrl = import.meta.env.VITE_API_URL || import.meta.env.VITE_BACKEND_URL;
 const BASE_URL = configuredApiUrl || "";
 
 export async function apiRequest(endpoint, method = "GET", body = null, customHeaders = {}) {
