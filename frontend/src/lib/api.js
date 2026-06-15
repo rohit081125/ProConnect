@@ -1,5 +1,4 @@
-const configuredApiUrl = import.meta.env.VITE_API_URL || import.meta.env.VITE_BACKEND_URL;
-const BASE_URL = configuredApiUrl || "";
+const BASE_URL = "";
 
 export async function apiRequest(endpoint, method = "GET", body = null, customHeaders = {}) {
   const token = localStorage.getItem("token");
