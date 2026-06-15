@@ -11,7 +11,6 @@ import com.proconnect.backend.service.ChatService;
 
 @RestController
 @RequestMapping("/api/chat")
-@CrossOrigin(origins = "*")
 public class ChatController {
 
     private final ChatService chatService;
@@ -45,5 +44,21 @@ public class ChatController {
     public Map<String, String> uploadFile(@RequestParam("file") MultipartFile file) {
         String url = chatService.uploadFile(file);
         return Map.of("url", url);
+    }
+
+    @GetMapping("/admin/threads")
+    public List<com.proconnect.backend.dto.UserResponse> getAdminThreads() {
+        return chatService.getAdminThreads();
+    }
+
+    @GetMapping("/threads/{userId}")
+    public List<com.proconnect.backend.dto.UserResponse> getUserThreads(@PathVariable String userId) {
+        return chatService.getUserThreads(userId);
+    }
+
+    @GetMapping("/unread-count/{userId}")
+    public java.util.Map<String, Long> getUnreadMessageCount(@PathVariable String userId) {
+        long count = chatService.getUnreadMessageCount(userId);
+        return java.util.Map.of("unreadCount", count);
     }
 }

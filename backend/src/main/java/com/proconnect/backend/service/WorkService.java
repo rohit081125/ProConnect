@@ -17,10 +17,12 @@ public class WorkService {
 
     private final WorkRepository workRepository;
     private final CloudinaryService cloudinaryService;
+    private final UserService userService;
 
-    public WorkService(WorkRepository workRepository, CloudinaryService cloudinaryService) {
+    public WorkService(WorkRepository workRepository, CloudinaryService cloudinaryService, UserService userService) {
         this.workRepository = workRepository;
         this.cloudinaryService = cloudinaryService;
+        this.userService = userService;
     }
 
     public Work createWork(
@@ -36,6 +38,8 @@ public class WorkService {
             String postedBy,
             MultipartFile image
     ) {
+        userService.requireActiveUser(postedBy);
+
         Work work = new Work();
 
         work.setTitle(title);
@@ -47,6 +51,7 @@ public class WorkService {
         work.setProjectLevel(projectLevel);
         work.setWorkType(workType);
         work.setPostedBy(postedBy);
+        work.setStatus("active");
         work.setCreatedAt(LocalDateTime.now());
 
         if (deadline != null && !deadline.isBlank()) {
@@ -62,7 +67,9 @@ public class WorkService {
     }
 
     public List<Work> getAllWorks() {
-        return workRepository.findAll();
+        return workRepository.findAll().stream()
+                .filter(work -> work.getStatus() == null || "active".equalsIgnoreCase(work.getStatus()))
+                .collect(Collectors.toList());
     }
 
     public List<Work> getWorksByUser(String userId) {

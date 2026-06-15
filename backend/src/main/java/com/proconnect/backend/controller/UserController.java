@@ -9,13 +9,17 @@ import com.proconnect.backend.service.UserService;
 
 @RestController
 @RequestMapping("/api/users")
-@CrossOrigin(origins = "http://localhost:5000")
 public class UserController {
 
     private final UserService userService;
 
     public UserController(UserService userService) {
         this.userService = userService;
+    }
+
+    @GetMapping("/admin-user")
+    public UserResponse getAdminUser() {
+        return userService.getAdminUser();
     }
 
     @GetMapping("/{id}")

@@ -13,7 +13,6 @@ import com.proconnect.backend.service.ReviewService;
 
 @RestController
 @RequestMapping("/api/reviews")
-@CrossOrigin(origins = "http://localhost:5000")
 public class ReviewController {
 
     @Autowired

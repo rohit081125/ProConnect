@@ -17,7 +17,13 @@ public class UserResponse {
     private String education;
     private String experience;
     private String profileImage;
+    private String accountStatus;
+    private Integer warningCount;
+    private String adminNote;
+    private LocalDateTime suspendedUntil;
+    private LocalDateTime lastLoginAt;
     private LocalDateTime createdAt;
+    private String phoneNumber;
 
     public UserResponse() {
     }
@@ -35,7 +41,13 @@ public class UserResponse {
             String education,
             String experience,
             String profileImage,
-            LocalDateTime createdAt) {
+            String accountStatus,
+            Integer warningCount,
+            String adminNote,
+            LocalDateTime suspendedUntil,
+            LocalDateTime lastLoginAt,
+            LocalDateTime createdAt,
+            String phoneNumber) {
         this.id = id;
         this.name = name;
         this.email = email;
@@ -48,7 +60,13 @@ public class UserResponse {
         this.education = education;
         this.experience = experience;
         this.profileImage = profileImage;
+        this.accountStatus = accountStatus;
+        this.warningCount = warningCount;
+        this.adminNote = adminNote;
+        this.suspendedUntil = suspendedUntil;
+        this.lastLoginAt = lastLoginAt;
         this.createdAt = createdAt;
+        this.phoneNumber = phoneNumber;
     }
 
     public String getId() {
@@ -147,11 +165,59 @@ public class UserResponse {
         this.profileImage = profileImage;
     }
 
+    public String getAccountStatus() {
+        return accountStatus;
+    }
+
+    public void setAccountStatus(String accountStatus) {
+        this.accountStatus = accountStatus;
+    }
+
+    public Integer getWarningCount() {
+        return warningCount;
+    }
+
+    public void setWarningCount(Integer warningCount) {
+        this.warningCount = warningCount;
+    }
+
+    public String getAdminNote() {
+        return adminNote;
+    }
+
+    public void setAdminNote(String adminNote) {
+        this.adminNote = adminNote;
+    }
+
+    public LocalDateTime getSuspendedUntil() {
+        return suspendedUntil;
+    }
+
+    public void setSuspendedUntil(LocalDateTime suspendedUntil) {
+        this.suspendedUntil = suspendedUntil;
+    }
+
+    public LocalDateTime getLastLoginAt() {
+        return lastLoginAt;
+    }
+
+    public void setLastLoginAt(LocalDateTime lastLoginAt) {
+        this.lastLoginAt = lastLoginAt;
+    }
+
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
 
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 }

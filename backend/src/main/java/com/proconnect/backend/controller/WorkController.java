@@ -11,7 +11,6 @@ import com.proconnect.backend.service.WorkService;
 
 @RestController
 @RequestMapping("/api/works")
-@CrossOrigin(origins = "*")
 public class WorkController {
 
     private final WorkService workService;

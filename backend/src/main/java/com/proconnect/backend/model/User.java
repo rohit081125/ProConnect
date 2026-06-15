@@ -24,7 +24,16 @@ public class User {
     private String education;
     private String experience;
     private String profileImage;
+    private String accountStatus = "active";
+    private Integer warningCount = 0;
+    private String adminNote = "";
+    private LocalDateTime suspendedUntil;
+    private LocalDateTime lastLoginAt;
     private LocalDateTime createdAt = LocalDateTime.now();
+    private String phoneNumber;
+    private String emailOtp;
+    private String phoneOtp;
+    private LocalDateTime otpExpiresAt;
 
     public User() {
     }
@@ -162,11 +171,83 @@ public class User {
         this.profileImage = profileImage;
     }
 
+    public String getAccountStatus() {
+        return accountStatus;
+    }
+
+    public void setAccountStatus(String accountStatus) {
+        this.accountStatus = accountStatus;
+    }
+
+    public Integer getWarningCount() {
+        return warningCount;
+    }
+
+    public void setWarningCount(Integer warningCount) {
+        this.warningCount = warningCount;
+    }
+
+    public String getAdminNote() {
+        return adminNote;
+    }
+
+    public void setAdminNote(String adminNote) {
+        this.adminNote = adminNote;
+    }
+
+    public LocalDateTime getSuspendedUntil() {
+        return suspendedUntil;
+    }
+
+    public void setSuspendedUntil(LocalDateTime suspendedUntil) {
+        this.suspendedUntil = suspendedUntil;
+    }
+
+    public LocalDateTime getLastLoginAt() {
+        return lastLoginAt;
+    }
+
+    public void setLastLoginAt(LocalDateTime lastLoginAt) {
+        this.lastLoginAt = lastLoginAt;
+    }
+
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
 
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public String getEmailOtp() {
+        return emailOtp;
+    }
+
+    public void setEmailOtp(String emailOtp) {
+        this.emailOtp = emailOtp;
+    }
+
+    public String getPhoneOtp() {
+        return phoneOtp;
+    }
+
+    public void setPhoneOtp(String phoneOtp) {
+        this.phoneOtp = phoneOtp;
+    }
+
+    public LocalDateTime getOtpExpiresAt() {
+        return otpExpiresAt;
+    }
+
+    public void setOtpExpiresAt(LocalDateTime otpExpiresAt) {
+        this.otpExpiresAt = otpExpiresAt;
     }
 }

@@ -20,11 +20,14 @@ public class Report {
     private String reporterRole; // client or freelancer
     private String reason;
     private String description;
+    private String status;
+    private String adminNote;
 
     private LocalDateTime createdAt;
 
     public Report() {
         this.createdAt = LocalDateTime.now();
+        this.status = "open";
     }
 
     public String getId() {
@@ -89,5 +92,21 @@ public class Report {
 
     public LocalDateTime getCreatedAt() {
         return createdAt;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getAdminNote() {
+        return adminNote;
+    }
+
+    public void setAdminNote(String adminNote) {
+        this.adminNote = adminNote;
     }
 }

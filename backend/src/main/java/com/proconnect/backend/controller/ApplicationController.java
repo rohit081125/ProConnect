@@ -10,7 +10,6 @@ import com.proconnect.backend.service.ApplicationService;
 
 @RestController
 @RequestMapping("/api/applications")
-@CrossOrigin(origins = "*")
 public class ApplicationController {
 
     private final ApplicationService applicationService;

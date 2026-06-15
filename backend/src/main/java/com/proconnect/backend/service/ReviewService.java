@@ -22,6 +22,9 @@ public class ReviewService {
     @Autowired
     private ApplicationRepository applicationRepository;
 
+    @Autowired
+    private UserService userService;
+
     public Review createReview(CreateReviewRequest request) {
         if (request.getApplicationId() == null || request.getApplicationId().trim().isEmpty()) {
             throw new RuntimeException("Application ID is required");
@@ -41,6 +44,8 @@ public class ReviewService {
 
         Application application = applicationRepository.findById(request.getApplicationId())
                 .orElseThrow(() -> new RuntimeException("Application not found"));
+        userService.requireActiveUser(request.getReviewerId());
+        userService.requireActiveUser(request.getReviewedUserId());
 
         if (!"completed".equalsIgnoreCase(application.getStatus())) {
             throw new RuntimeException("Review can only be submitted after completion");

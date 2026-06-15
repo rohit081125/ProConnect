@@ -3,6 +3,7 @@ package com.proconnect.backend.service;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -10,15 +11,23 @@ import org.springframework.web.multipart.MultipartFile;
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 import com.proconnect.backend.model.Chat;
+import com.proconnect.backend.model.User;
 import com.proconnect.backend.repository.ChatRepository;
+import com.proconnect.backend.repository.UserRepository;
 
 @Service
 public class ChatService {
 
     private final ChatRepository chatRepository;
+    private final UserService userService;
+    private final UserRepository userRepository;
+    private final NotificationService notificationService;
 
-    public ChatService(ChatRepository chatRepository) {
+    public ChatService(ChatRepository chatRepository, UserService userService, UserRepository userRepository, NotificationService notificationService) {
         this.chatRepository = chatRepository;
+        this.userService = userService;
+        this.userRepository = userRepository;
+        this.notificationService = notificationService;
     }
 
     public Chat sendMessage(Chat chat) {
@@ -28,6 +37,19 @@ public class ChatService {
 
         if (chat.getReceiverId() == null || chat.getReceiverId().trim().isEmpty()) {
             throw new RuntimeException("Receiver ID is required");
+        }
+
+        User sender = userRepository.findById(chat.getSenderId())
+                .orElseThrow(() -> new RuntimeException("Sender not found"));
+        User receiver = userRepository.findById(chat.getReceiverId())
+                .orElseThrow(() -> new RuntimeException("Receiver not found"));
+
+        boolean isSenderAdmin = "admin".equalsIgnoreCase(sender.getRole());
+        boolean isReceiverAdmin = "admin".equalsIgnoreCase(receiver.getRole());
+
+        if (!isSenderAdmin && !isReceiverAdmin) {
+            userService.requireActiveUser(chat.getSenderId());
+            userService.requireActiveUser(chat.getReceiverId());
         }
 
         if (chat.getType() == null || chat.getType().trim().isEmpty()) {
@@ -61,7 +83,8 @@ public class ChatService {
             chat.setIsRead(false);
         }
 
-        return chatRepository.save(chat);
+        Chat savedChat = chatRepository.save(chat);
+        return savedChat;
     }
 
     public List<Chat> getMessages(String user1, String user2) {
@@ -91,16 +114,42 @@ public class ChatService {
             ));
 
             @SuppressWarnings("unchecked")
-            Map<String, Object> uploadResult = cloudinary.uploader().upload(
-                    file.getBytes(),
-                    ObjectUtils.emptyMap()
-            );
-
-            return uploadResult.get("secure_url").toString();
-
+            Map<String, Object> uploadResult = cloudinary.uploader().upload(file.getBytes(), ObjectUtils.emptyMap());
+            return (String) uploadResult.get("secure_url");
         } catch (Exception e) {
-            e.printStackTrace();
-            throw new RuntimeException("File upload failed: " + e.getMessage());
+            throw new RuntimeException("Failed to upload file to Cloudinary", e);
         }
+    }
+
+    public List<com.proconnect.backend.dto.UserResponse> getAdminThreads() {
+        String adminEmail = "rohitdongre1108@gmail.com";
+        User admin = userRepository.findByEmail(adminEmail)
+                .orElseThrow(() -> new RuntimeException("Admin not found"));
+
+        List<Chat> chats = chatRepository.findBySenderIdOrReceiverId(admin.getId(), admin.getId());
+        List<String> userIds = chats.stream()
+                .map(chat -> chat.getSenderId().equals(admin.getId()) ? chat.getReceiverId() : chat.getSenderId())
+                .distinct()
+                .collect(Collectors.toList());
+
+        return userRepository.findAllById(userIds).stream()
+                .map(userService::mapToUserResponse)
+                .collect(Collectors.toList());
+    }
+
+    public List<com.proconnect.backend.dto.UserResponse> getUserThreads(String userId) {
+        List<Chat> chats = chatRepository.findBySenderIdOrReceiverId(userId, userId);
+        List<String> userIds = chats.stream()
+                .map(chat -> chat.getSenderId().equals(userId) ? chat.getReceiverId() : chat.getSenderId())
+                .distinct()
+                .collect(Collectors.toList());
+
+        return userRepository.findAllById(userIds).stream()
+                .map(userService::mapToUserResponse)
+                .collect(Collectors.toList());
+    }
+
+    public long getUnreadMessageCount(String userId) {
+        return chatRepository.countByReceiverIdAndIsRead(userId, false);
     }
 }

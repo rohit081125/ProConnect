@@ -20,17 +20,20 @@ public class ApplicationService {
     private final WorkRepository workRepository;
     private final UserRepository userRepository;
     private final NotificationService notificationService;
+    private final UserService userService;
 
     public ApplicationService(
             ApplicationRepository applicationRepository,
             WorkRepository workRepository,
             UserRepository userRepository,
-            NotificationService notificationService
+            NotificationService notificationService,
+            UserService userService
     ) {
         this.applicationRepository = applicationRepository;
         this.workRepository = workRepository;
         this.userRepository = userRepository;
         this.notificationService = notificationService;
+        this.userService = userService;
     }
 
     public Application createApplication(CreateApplicationRequest request) {
@@ -60,6 +63,8 @@ public class ApplicationService {
 
         User applicant = userRepository.findById(request.getApplicantId())
                 .orElseThrow(() -> new RuntimeException("Applicant not found"));
+        userService.requireActiveUser(applicant.getId());
+        userService.requireActiveUser(work.getPostedBy());
 
         Application application = new Application();
         application.setWorkId(request.getWorkId());
@@ -110,11 +115,43 @@ public class ApplicationService {
         Application application = applicationRepository.findById(applicationId)
                 .orElseThrow(() -> new RuntimeException("Application not found"));
 
+        Work work = workRepository.findById(application.getWorkId())
+                .orElseThrow(() -> new RuntimeException("Work not found"));
+
+        String currentWorkStatus = work.getStatus() != null ? work.getStatus() : "active";
+        if (!"active".equalsIgnoreCase(currentWorkStatus)) {
+            throw new RuntimeException("This project is no longer active or has already been assigned.");
+        }
+
+        userService.requireActiveUser(work.getPostedBy());
+        userService.requireActiveUser(application.getApplicantId());
+
         application.setStatus("accepted");
         Application updatedApplication = applicationRepository.save(application);
 
-        Work work = workRepository.findById(application.getWorkId())
-                .orElseThrow(() -> new RuntimeException("Work not found"));
+        work.setStatus("accepted");
+        workRepository.save(work);
+
+        // Mark all other pending applications as expired
+        List<Application> otherApps = applicationRepository.findByWorkId(work.getId());
+        for (Application otherApp : otherApps) {
+            if (!otherApp.getId().equals(application.getId())) {
+                String otherStatus = otherApp.getStatus() != null ? otherApp.getStatus() : "pending";
+                if ("pending".equalsIgnoreCase(otherStatus)) {
+                    otherApp.setStatus("expired");
+                    applicationRepository.save(otherApp);
+
+                    notificationService.createNotification(
+                            otherApp.getApplicantId(),
+                            work.getPostedBy(),
+                            work.getId(),
+                            otherApp.getId(),
+                            "APPLICATION_EXPIRED",
+                            "The project '" + work.getTitle() + "' has been assigned to another applicant."
+                    );
+                }
+            }
+        }
 
         notificationService.createNotification(
                 application.getApplicantId(),
@@ -137,6 +174,8 @@ public class ApplicationService {
 
         Work work = workRepository.findById(application.getWorkId())
                 .orElseThrow(() -> new RuntimeException("Work not found"));
+        userService.requireActiveUser(work.getPostedBy());
+        userService.requireActiveUser(application.getApplicantId());
 
         notificationService.createNotification(
                 application.getApplicantId(),
@@ -160,6 +199,8 @@ public class ApplicationService {
 
         Work work = workRepository.findById(application.getWorkId())
                 .orElseThrow(() -> new RuntimeException("Work not found"));
+        userService.requireActiveUser(clientId);
+        userService.requireActiveUser(application.getApplicantId());
 
         if (!work.getPostedBy().equals(clientId)) {
             throw new RuntimeException("Only client can request completion");
@@ -197,11 +238,16 @@ public class ApplicationService {
 
         Work work = workRepository.findById(application.getWorkId())
                 .orElseThrow(() -> new RuntimeException("Work not found"));
+        userService.requireActiveUser(work.getPostedBy());
+        userService.requireActiveUser(freelancerId);
 
         application.setStatus("completed");
         application.setCompletedAt(LocalDateTime.now());
 
         Application updatedApplication = applicationRepository.save(application);
+
+        work.setStatus("completed");
+        workRepository.save(work);
 
         notificationService.createNotification(
                 work.getPostedBy(),
@@ -229,6 +275,8 @@ public class ApplicationService {
 
         Work work = workRepository.findById(application.getWorkId())
                 .orElseThrow(() -> new RuntimeException("Work not found"));
+        userService.requireActiveUser(work.getPostedBy());
+        userService.requireActiveUser(freelancerId);
 
         application.setStatus("accepted");
         application.setCompletionRequestedBy(null);

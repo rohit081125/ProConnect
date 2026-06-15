@@ -11,7 +11,6 @@ import com.proconnect.backend.service.NotificationService;
 
 @RestController
 @RequestMapping("/api/notifications")
-@CrossOrigin(origins = "http://localhost:5000")
 public class NotificationController {
 
     private final NotificationService notificationService;

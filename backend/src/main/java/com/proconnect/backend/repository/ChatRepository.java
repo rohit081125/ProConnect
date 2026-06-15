@@ -13,4 +13,7 @@ public interface ChatRepository extends MongoRepository<Chat, String> {
         String receiverId2, String senderId2
     );
     List<Chat> findBySenderIdAndReceiverId(String senderId, String receiverId);
+    List<Chat> findBySenderIdOrReceiverId(String senderId, String receiverId);
+    @org.springframework.data.mongodb.repository.Query("{ 'receiverId': ?0, 'isRead': { $ne: true } }")
+    long countByReceiverIdAndIsRead(String receiverId, boolean isRead);
 }

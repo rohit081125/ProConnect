@@ -7,11 +7,19 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 export default defineConfig({
-  root: path.resolve(__dirname, "client"),
+  root: path.resolve(__dirname, "frontend"),
   plugins: [react()],
   resolve: {
     alias: {
-      "@": path.resolve(__dirname, "client/src"),
+      "@": path.resolve(__dirname, "frontend/src"),
+    },
+  },
+  server: {
+    proxy: {
+      "/api": {
+        target: process.env.BACKEND_URL || "http://localhost:8080",
+        changeOrigin: true,
+      },
     },
   },
   build: {

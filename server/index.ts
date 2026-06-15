@@ -2,15 +2,25 @@ import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { serveStatic } from "./static";
 import { createServer } from "http";
+import { createProxyMiddleware } from "http-proxy-middleware";
 
 const app = express();
 const httpServer = createServer(app);
+const backendUrl = process.env.BACKEND_URL || "http://localhost:8080";
 
 declare module "http" {
   interface IncomingMessage {
     rawBody: unknown;
   }
 }
+
+app.use(
+  "/api",
+  createProxyMiddleware({
+    target: backendUrl,
+    changeOrigin: true,
+  }),
+);
 
 // Parse JSON
 app.use(

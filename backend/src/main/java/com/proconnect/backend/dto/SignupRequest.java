@@ -6,15 +6,17 @@ public class SignupRequest {
     private String email;
     private String password;
     private String role;
+    private String phoneNumber;
 
     public SignupRequest() {
     }
 
-    public SignupRequest(String name, String email, String password, String role) {
+    public SignupRequest(String name, String email, String password, String role, String phoneNumber) {
         this.name = name;
         this.email = email;
         this.password = password;
         this.role = role;
+        this.phoneNumber = phoneNumber;
     }
 
     public String getName() {
@@ -47,5 +49,13 @@ public class SignupRequest {
 
     public void setRole(String role) {
         this.role = role;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 }

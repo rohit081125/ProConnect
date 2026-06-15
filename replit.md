@@ -1,45 +1,45 @@
 # ProConnect - Skill Economy Platform
 
 ## Overview
-ProConnect is a frontend-only React SPA for a skill economy network. Users can post work, apply for projects, hire talent, and build reputation through a trust-based system. Single role system - everyone can both post and apply.
+ProConnect is a full-stack React and Spring Boot skill economy platform. Users can post work, apply for projects, hire talent, message collaborators, report issues, and build reputation through reviews.
 
 ## Tech Stack
 - React + TypeScript
 - Tailwind CSS with Shadcn UI components
 - Zustand for state management
 - Wouter for client-side routing
-- Vite + Express (backend serves SPA only)
-- Dummy JSON data (no database, no API, frontend simulation)
+- Vite frontend with an Express/Vite development shell
+- Java Spring Boot backend with MongoDB APIs
 
 ## Project Architecture
 ```
-client/src/
-  App.tsx              - Main app with routing (wouter) and providers
+frontend/src/
+  App.jsx              - Main app with routing (wouter) and providers
   components/
-    theme-provider.tsx  - Light/dark mode toggle
-    navbar.tsx          - Top navigation with logo, notifications, username
-    bottom-nav.tsx      - Mobile bottom navigation (Home, Messages, Post, Applications, Profile)
-    work-card.tsx       - Reusable work post card component
+    theme-provider.js   - Light/dark mode toggle
+    navbar.jsx          - Top navigation with logo, notifications, username
+    bottom-nav.js       - Mobile bottom navigation (Home, Messages, Post, Applications, Profile)
+    work-card.jsx       - Reusable work post card component
     ui/                 - Shadcn UI components
   pages/
-    landing.tsx         - Public landing page with hero, features, CTAs
-    about.tsx           - About page with vision, mission, team
-    signup.tsx          - Signup form (name, email, password)
-    setup-profile.tsx   - Profile setup after signup (bio, skills, location)
-    login.tsx           - Login form with demo account hints
-    home.tsx            - Main feed with search, filters, sort, apply dialog
-    messages.tsx        - Chat interface (threads + chat window)
-    add-work.tsx        - Post new work form
-    my-applications.tsx - Sent/received applications, accept/reject, mark done, report
-    profile.tsx         - User profile with edit, skills, portfolio, reviews
+    landing.js          - Public landing page with hero, features, CTAs
+    signup.jsx          - Signup form
+    login.jsx           - Login form
+    home.jsx            - Main feed with search, filters, sort, apply dialog
+    messages.jsx        - Chat interface
+    add-work.jsx        - Post new work form
+    my-applications.jsx - Sent/received applications, completion, reports, reviews
+    profile.jsx         - User profile with edit, skills, portfolio, reviews
+    public-profile.jsx  - Public user profiles
+    admin.jsx           - Admin portal for users, reports, and moderation
   lib/
-    store.ts            - Zustand global store (auth, work, applications, messages, etc.)
-    types.ts            - TypeScript interfaces
-    dummy-data.ts       - Seed data (users, work posts, applications, messages, reviews)
-    queryClient.ts      - TanStack Query setup (minimal usage)
-    utils.ts            - Utility functions
+    store.js            - Zustand global store
+    api.js              - Backend API helpers
+    dummy-data.js       - Local fallback/demo data
+    queryClient.js      - TanStack Query setup
+    utils.js            - Utility functions
   hooks/
-    use-toast.ts        - Toast notifications
+    use-toast.js        - Toast notifications
 ```
 
 ## User Preferences

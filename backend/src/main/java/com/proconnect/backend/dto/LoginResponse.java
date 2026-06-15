@@ -6,17 +6,21 @@ public class LoginResponse {
     private String userId;
     private String name;
     private String email;
-    private String profileImage; // 🔥 IMPORTANT
-    private String token; // optional but recommended
+    private String role;
+    private String accountStatus;
+    private String profileImage;
+    private String token;
 
     public LoginResponse() {
     }
 
-    public LoginResponse(String message, String userId, String name, String email, String profileImage, String token) {
+    public LoginResponse(String message, String userId, String name, String email, String role, String accountStatus, String profileImage, String token) {
         this.message = message;
         this.userId = userId;
         this.name = name;
         this.email = email;
+        this.role = role;
+        this.accountStatus = accountStatus;
         this.profileImage = profileImage;
         this.token = token;
     }
@@ -35,6 +39,14 @@ public class LoginResponse {
 
     public String getEmail() {
         return email;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public String getAccountStatus() {
+        return accountStatus;
     }
 
     public String getProfileImage() {

@@ -23,9 +23,11 @@ public class Work {
     private String workType;
     private String imageUrl;
     private String postedBy;
+    private String status;
     private LocalDateTime createdAt;
 
     public Work() {
+        this.status = "active";
         this.createdAt = LocalDateTime.now();
     }
 
@@ -131,5 +133,13 @@ public class Work {
 
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public String getStatus() {
+        return this.status != null ? this.status : "active";
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

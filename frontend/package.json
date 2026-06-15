@@ -1,0 +1,10 @@
+{
+  "name": "proconnect-frontend",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --config ../vite.config.js --host 127.0.0.1 --port 5000",
+    "build": "vite build --config ../vite.config.js",
+    "preview": "vite preview --config ../vite.config.js --host 127.0.0.1 --port 5000"
+  }
+}

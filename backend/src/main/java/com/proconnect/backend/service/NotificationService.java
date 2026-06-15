@@ -37,14 +37,18 @@ public class NotificationService {
         return notificationRepository.save(notification);
     }
 
-    // Get all notifications (latest first)
+    // Get all notifications (latest first), filtering out message-related notifications
     public List<Notification> getUserNotifications(String userId) {
-        return notificationRepository.findByUserIdOrderByCreatedAtDesc(userId);
+        return notificationRepository.findByUserIdOrderByCreatedAtDesc(userId).stream()
+                .filter(n -> !"SUPPORT_MESSAGE_RECEIVED".equalsIgnoreCase(n.getType()) && !"APPEAL_SUBMITTED".equalsIgnoreCase(n.getType()))
+                .collect(java.util.stream.Collectors.toList());
     }
 
-    // Count unread notifications
+    // Count unread notifications, filtering out message-related notifications
     public long getUnreadCount(String userId) {
-        return notificationRepository.countByUserIdAndReadFalse(userId);
+        return notificationRepository.findByUserIdOrderByCreatedAtDesc(userId).stream()
+                .filter(n -> !n.isRead() && !"SUPPORT_MESSAGE_RECEIVED".equalsIgnoreCase(n.getType()) && !"APPEAL_SUBMITTED".equalsIgnoreCase(n.getType()))
+                .count();
     }
 
     // Mark single notification as read
