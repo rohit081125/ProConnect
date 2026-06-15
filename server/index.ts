@@ -15,10 +15,10 @@ declare module "http" {
 }
 
 app.use(
-  "/api",
   createProxyMiddleware({
     target: backendUrl,
     changeOrigin: true,
+    pathFilter: "/api",
     on: {
       proxyReq: (proxyReq) => {
         // Remove origin header to prevent Spring Boot from performing CORS checks on proxied requests
