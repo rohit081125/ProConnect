@@ -19,6 +19,12 @@ app.use(
   createProxyMiddleware({
     target: backendUrl,
     changeOrigin: true,
+    on: {
+      proxyReq: (proxyReq) => {
+        // Remove origin header to prevent Spring Boot from performing CORS checks on proxied requests
+        proxyReq.removeHeader("origin");
+      },
+    },
   }),
 );
 
