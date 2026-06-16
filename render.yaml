@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: proconnect-backend
+    runtime: docker
+    rootDir: backend
+    dockerfilePath: ./Dockerfile
+    plan: free
+    autoDeploy: true
+    envVars:
+      - key: PORT
+        value: 8080
