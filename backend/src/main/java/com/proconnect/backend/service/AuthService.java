@@ -117,14 +117,13 @@ public class AuthService implements UserDetailsService {
     }
 
     public LoginResponse signup(SignupRequest request) {
-        User user = userRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new RuntimeException("Email must be verified first"));
-
-        if (!"VERIFIED".equals(user.getEmailOtp())) {
-            throw new RuntimeException("Email must be verified first");
+        Optional<User> existingUser = userRepository.findByEmail(request.getEmail());
+        if (existingUser.isPresent()) {
+            throw new RuntimeException("Email already registered");
         }
 
-        // Complete user setup
+        User user = new User();
+        user.setEmail(request.getEmail());
         user.setName(request.getName());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setRole(request.getRole() != null && !request.getRole().isBlank() ? request.getRole() : "user");
@@ -137,7 +136,7 @@ public class AuthService implements UserDetailsService {
         user.setExperience("");
         user.setProfileImage("");
         user.setAccountStatus("active");
-        user.setEmailOtp(null); // Clear verification flag
+        user.setEmailOtp(null);
         user.setCreatedAt(LocalDateTime.now());
         user.setPhoneNumber(request.getPhoneNumber());
 

@@ -10,8 +10,10 @@ import {
   Globe,
   Linkedin,
   Loader2,
+  Mail,
   MapPin,
   MessageSquare,
+  Phone,
   ShieldCheck,
   Star,
 } from "lucide-react";
@@ -298,6 +300,24 @@ export default function PublicProfile() {
                     ))
                   ) : (
                     <p className="text-sm text-muted-foreground">No skills added yet.</p>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="rounded-2xl border shadow-sm">
+              <CardContent className="space-y-3 p-5">
+                <h2 className="text-sm font-semibold uppercase text-muted-foreground">Contact Info</h2>
+                <div className="space-y-3 mt-3">
+                  <div className="flex items-center gap-2.5 text-sm text-muted-foreground">
+                    <Mail className="h-4 w-4 text-primary shrink-0" />
+                    <span className="truncate">{profile.email || "No email provided"}</span>
+                  </div>
+                  {currentUser?.role?.toLowerCase() === "admin" && profile.phoneNumber && (
+                    <div className="flex items-center gap-2.5 text-sm text-muted-foreground">
+                      <Phone className="h-4 w-4 text-primary shrink-0" />
+                      <span>{profile.phoneNumber}</span>
+                    </div>
                   )}
                 </div>
               </CardContent>

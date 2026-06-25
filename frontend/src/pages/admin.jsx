@@ -329,12 +329,20 @@ export default function AdminPortal() {
     }, {});
   }, [reports]);
 
-  const suspiciousUsers = users.filter(
-    (user) =>
-      (reportedCounts[user.id] || reportedCounts[user._id] || 0) >= 2 ||
-      ["banned", "suspended"].includes((user.accountStatus || "").toLowerCase()) ||
-      Number(user.warningCount || 0) >= 2
-  );
+  const suspiciousUsers = useMemo(() => {
+    return users
+      .filter(
+        (user) =>
+          (reportedCounts[user.id] || reportedCounts[user._id] || 0) >= 2 ||
+          ["banned", "suspended"].includes((user.accountStatus || "").toLowerCase()) ||
+          Number(user.warningCount || 0) >= 2
+      )
+      .sort((a, b) => {
+        const countA = reportedCounts[a.id] || reportedCounts[a._id] || 0;
+        const countB = reportedCounts[b.id] || reportedCounts[b._id] || 0;
+        return countB - countA;
+      });
+  }, [users, reportedCounts]);
 
   const actOnUser = async (userId, action) => {
     const payload = { note: adminNote, suspendDays: Number(suspendDays) || 7 };

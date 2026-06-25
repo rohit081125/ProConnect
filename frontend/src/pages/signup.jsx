@@ -43,7 +43,7 @@ export default function Signup() {
   const [loading, setLoading] = useState(false);
 
   const [otpSent, setOtpSent] = useState(false);
-  const [otpVerified, setOtpVerified] = useState(false);
+  const [otpVerified, setOtpVerified] = useState(true);
   const [resendTimer, setResendTimer] = useState(0);
   const [otpCode, setOtpCode] = useState("");
   const [otpLoading, setOtpLoading] = useState(false);
@@ -375,84 +375,22 @@ export default function Signup() {
                       <FormItem>
                         <FormLabel className="text-sm font-semibold">Email Address</FormLabel>
                         <FormControl>
-                          <div className="relative flex gap-2">
-                            <div className="relative flex-1">
-                              <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                              <Input
-                                type="email"
-                                placeholder="you@example.com"
-                                autoComplete="email"
-                                disabled={otpVerified}
-                                className="pl-10 h-12 bg-background/50 border-border/50 focus:border-accent/50 focus:ring-accent/20 transition-all duration-300"
-                                {...field}
-                                data-testid="input-email"
-                              />
-                            </div>
-                            {!otpVerified && (
-                              <Button
-                                type="button"
-                                onClick={handleSendOtp}
-                                disabled={otpSending || resendTimer > 0 || !field.value || !/^\S+@\S+\.\S+$/.test(field.value)}
-                                className="h-12 px-3 text-xs font-semibold bg-accent hover:bg-accent/90 text-accent-foreground rounded-xl transition-all"
-                              >
-                                {otpSending ? (
-                                  <Loader2 className="h-4 w-4 animate-spin" />
-                                ) : resendTimer > 0 ? (
-                                  `Resend (${resendTimer}s)`
-                                ) : otpSent ? (
-                                  "Resend OTP"
-                                ) : (
-                                  "Send OTP"
-                                )}
-                              </Button>
-                            )}
-                            {otpVerified && (
-                              <div className="flex items-center justify-center h-12 px-3 rounded-xl border border-emerald-500/20 bg-emerald-500/10 text-emerald-500 text-xs font-bold select-none">
-                                Verified ✓
-                              </div>
-                            )}
+                          <div className="relative">
+                            <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                            <Input
+                              type="email"
+                              placeholder="you@example.com"
+                              autoComplete="email"
+                              className="pl-10 h-12 bg-background/50 border-border/50 focus:border-accent/50 focus:ring-accent/20 transition-all duration-300"
+                              {...field}
+                              data-testid="input-email"
+                            />
                           </div>
                         </FormControl>
                         <FormMessage />
                       </FormItem>
                     )}
                   />
-
-                  {/* OTP Verification Block */}
-                  {otpSent && !otpVerified && (
-                    <div className="p-4 rounded-2xl bg-accent/5 border border-accent/10 space-y-3">
-                      <div className="text-xs font-semibold text-accent-foreground block text-left">
-                        Enter Email OTP Code
-                      </div>
-                      <div className="flex gap-2">
-                        <div className="relative flex-1">
-                          <Key className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                          <Input
-                            type="text"
-                            maxLength={6}
-                            placeholder="6-digit code"
-                            value={otpCode}
-                            onChange={(e) => setOtpCode(e.target.value.replace(/\D/g, ""))}
-                            className="pl-10 h-11 bg-background/50 border-border/50 text-center font-bold tracking-widest text-sm focus:border-accent/50 focus:ring-accent/20 transition-all duration-300"
-                            data-testid="input-email-otp"
-                          />
-                        </div>
-                        <Button
-                          type="button"
-                          onClick={handleVerifyOtp}
-                          disabled={otpLoading || otpCode.length !== 6}
-                          className="h-11 px-4 text-xs font-semibold bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl transition-all"
-                          data-testid="button-verify-email-otp"
-                        >
-                          {otpLoading ? (
-                            <Loader2 className="h-4 w-4 animate-spin" />
-                          ) : (
-                            "Verify OTP"
-                          )}
-                        </Button>
-                      </div>
-                    </div>
-                  )}
 
                   <FormField
                     control={form.control}

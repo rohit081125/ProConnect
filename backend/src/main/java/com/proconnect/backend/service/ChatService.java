@@ -128,7 +128,8 @@ public class ChatService {
 
         List<Chat> chats = chatRepository.findBySenderIdOrReceiverId(admin.getId(), admin.getId());
         List<String> userIds = chats.stream()
-                .map(chat -> chat.getSenderId().equals(admin.getId()) ? chat.getReceiverId() : chat.getSenderId())
+                .map(chat -> admin.getId().equals(chat.getSenderId()) ? chat.getReceiverId() : chat.getSenderId())
+                .filter(java.util.Objects::nonNull)
                 .distinct()
                 .collect(Collectors.toList());
 
@@ -140,7 +141,8 @@ public class ChatService {
     public List<com.proconnect.backend.dto.UserResponse> getUserThreads(String userId) {
         List<Chat> chats = chatRepository.findBySenderIdOrReceiverId(userId, userId);
         List<String> userIds = chats.stream()
-                .map(chat -> chat.getSenderId().equals(userId) ? chat.getReceiverId() : chat.getSenderId())
+                .map(chat -> userId.equals(chat.getSenderId()) ? chat.getReceiverId() : chat.getSenderId())
+                .filter(java.util.Objects::nonNull)
                 .distinct()
                 .collect(Collectors.toList());
 

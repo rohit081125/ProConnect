@@ -317,6 +317,10 @@ export default function Messages() {
   };
 
   const loadSelectedUser = async () => {
+    if (!selectedUserId) {
+      setSelectedUser(null);
+      return;
+    }
     try {
       const response = await getUserProfile(selectedUserId);
       const user = response?.data || response;
