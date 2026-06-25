@@ -1,3 +1,12 @@
+---
+title: ProConnect Backend
+emoji: 🚀
+colorFrom: blue
+colorTo: green
+sdk: docker
+app_port: 7860
+---
+
 # ProConnect — The Skill Economy Platform
 
 ProConnect is a secure, direct skill economy platform designed to connect talent and opportunity through trust, verified capability, and seamless collaboration. It eliminates intermediaries, enabling professionals to offer services, bid on projects, and build global careers entirely on documented achievements.
